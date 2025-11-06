@@ -1,62 +1,51 @@
 #include <iostream>
 using namespace std;
 
-#define MAX 100 // Maximum number of nodes
+#define MAX 100
 
-// Function to perform BFS traversal without using STL
-void bfs(int startNode, int graph[MAX][MAX], int numNodes)
-{
-    bool visited[MAX];
-    int queue[MAX];
-    int front = 0, rear = 0;
+// DFS function
+void dfs(int node, int graph[MAX][MAX], bool visited[], int numNodes) {
+    visited[node] = true;
+    cout << "Visited: " << node << endl;
 
-    // Initialize all nodes as unvisited
-    for (int i = 0; i < numNodes; i++)
-        visited[i] = false;
-
-    // Mark start node as visited and enqueue it
-    visited[startNode] = true;
-    queue[rear++] = startNode;
-
-    // BFS loop
-    while (front < rear)
-    {
-        int node = queue[front++];
-        cout << "Visited: " << node << endl;
-
-        // Visit all adjacent nodes
-        for (int neighbour = 0; neighbour < numNodes; neighbour++)
-        {
-            if (graph[node][neighbour] == 1 && !visited[neighbour])
-            {
-                visited[neighbour] = true;
-                queue[rear++] = neighbour;
-            }
+    for (int i = 0; i < numNodes; i++) {
+        if (graph[node][i] == 1 && !visited[i]) {
+            dfs(i, graph, visited, numNodes);
         }
     }
 }
 
-int main()
-{
+int main() {
     int numNodes, numEdges;
     cout << "Enter number of nodes: ";
     cin >> numNodes;
     cout << "Enter number of edges: ";
     cin >> numEdges;
 
-    int graph[MAX][MAX] = {0}; // Adjacency matrix initialized to 0
+    int graph[MAX][MAX];
+
+    // Initialize adjacency matrix
+    for (int i = 0; i < numNodes; i++) {
+        for (int j = 0; j < numNodes; j++) {
+            graph[i][j] = 0;
+        }
+    }
 
     cout << "Enter edges (u v) where u and v are nodes (0 to " << numNodes - 1 << "):" << endl;
-    for (int i = 0; i < numEdges; i++)
-    {
+    for (int i = 0; i < numEdges; i++) {
         int u, v;
         cin >> u >> v;
         graph[u][v] = 1;
         graph[v][u] = 1; // For undirected graph
     }
 
-    cout << "\nStarting BFS traversal from node 0:\n";
-    bfs(0, graph, numNodes);
+    bool visited[MAX];
+    for (int i = 0; i < numNodes; i++) {
+        visited[i] = false;
+    }
+
+    cout << "\nStarting DFS traversal from node 0:\n";
+    dfs(0, graph, visited, numNodes);
 
     return 0;
 }
